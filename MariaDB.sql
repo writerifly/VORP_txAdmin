@@ -1,25 +1,41 @@
+-- --------------------------------------------------------
+-- Host:                         127.0.0.1
+-- Server Version:               10.4.22-MariaDB - mariadb.org binary distribution
+-- Server Betriebssystem:        Win64
+-- HeidiSQL Version:             11.3.0.6295
+-- --------------------------------------------------------
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
+-- Exportiere Datenbank Struktur für vorp
+CREATE DATABASE IF NOT EXISTS `vorp` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `vorp`;
+
+-- Exportiere Struktur von Tabelle vorp.banks
 CREATE TABLE IF NOT EXISTS `banks` (
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `identifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `group` varchar(50) DEFAULT 'user',
-  `warnings` int(11) DEFAULT 0,
-  `banned` tinyint(1) DEFAULT NULL,
-  `banneduntil` int(10) DEFAULT 0,
-  `char` varchar(50) NOT NULL DEFAULT 'false',
-  PRIMARY KEY (`identifier`),
-  UNIQUE KEY `identifier` (`identifier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- Exportiere Daten aus Tabelle vorp.banks: ~3 rows (ungefähr)
+/*!40000 ALTER TABLE `banks` DISABLE KEYS */;
+INSERT INTO `banks` (`name`) VALUES
+	('Blackwater'),
+	('SaintDenis'),
+	('Valentine');
+/*!40000 ALTER TABLE `banks` ENABLE KEYS */;
 
-CREATE TABLE `bank_users` (
+-- Exportiere Struktur von Tabelle vorp.bank_users
+CREATE TABLE IF NOT EXISTS `bank_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
-  `identifier` varchar(50) NOT NULL COLLATE 'utf8mb4_bin',
+  `identifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `charidentifier` int(11) NOT NULL,
   `money` double(22,2) DEFAULT 0.00,
   `gold` double(22,2) DEFAULT 0.00,
@@ -27,11 +43,18 @@ CREATE TABLE `bank_users` (
   `invspace` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `name` (`name`),
+  KEY `bankusers` (`identifier`),
   CONSTRAINT `bank` FOREIGN KEY (`name`) REFERENCES `banks` (`name`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `bankusers` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
+-- Exportiere Daten aus Tabelle vorp.bank_users: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `bank_users` DISABLE KEYS */;
+INSERT INTO `bank_users` (`id`, `name`, `identifier`, `charidentifier`, `money`, `gold`, `items`, `invspace`) VALUES
+	(1, 'Valentine', 'steam:110000102bfe58a', 1, 500.00, 0.00, '[]', 10);
+/*!40000 ALTER TABLE `bank_users` ENABLE KEYS */;
 
+-- Exportiere Struktur von Tabelle vorp.banneds
 CREATE TABLE IF NOT EXISTS `banneds` (
   `b_id` int(11) NOT NULL AUTO_INCREMENT,
   `b_steam` varchar(100) NOT NULL,
@@ -44,6 +67,11 @@ CREATE TABLE IF NOT EXISTS `banneds` (
   PRIMARY KEY (`b_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
+-- Exportiere Daten aus Tabelle vorp.banneds: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `banneds` DISABLE KEYS */;
+/*!40000 ALTER TABLE `banneds` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.bills
 CREATE TABLE IF NOT EXISTS `bills` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `job` longtext DEFAULT NULL,
@@ -54,10 +82,13 @@ CREATE TABLE IF NOT EXISTS `bills` (
   `amount` double DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Exportiere Daten aus Tabelle vorp.bills: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `bills` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bills` ENABLE KEYS */;
 
-
+-- Exportiere Struktur von Tabelle vorp.characters
 CREATE TABLE IF NOT EXISTS `characters` (
   `identifier` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
   `steamname` varchar(50) COLLATE utf8mb4_bin NOT NULL DEFAULT '',
@@ -82,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `skinPlayer` longtext COLLATE utf8mb4_bin DEFAULT NULL,
   `compPlayer` longtext COLLATE utf8mb4_bin DEFAULT NULL,
   `jobgrade` int(11) DEFAULT 0,
-  `coords` LONGTEXT COLLATE utf8mb4_bin DEFAULT '{}', 
+  `coords` longtext COLLATE utf8mb4_bin DEFAULT NULL,
   `isdead` tinyint(1) DEFAULT 0,
   `clanid` int(11) DEFAULT 0,
   `trust` int(11) DEFAULT 0,
@@ -104,37 +135,21 @@ CREATE TABLE IF NOT EXISTS `characters` (
   KEY `compPlayer` (`compPlayer`(768)),
   KEY `info` (`info`(768)),
   KEY `inventory` (`inventory`(768)),
-  KEY `coords` (`coords`),
+  KEY `coords` (`coords`(768)),
   KEY `money` (`money`),
   KEY `meta` (`meta`),
   KEY `steamname` (`steamname`),
+  KEY `ammo` (`ammo`(768)),
   CONSTRAINT `FK_characters_users` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+-- Exportiere Daten aus Tabelle vorp.characters: ~1 rows (ungefähr)
+/*!40000 ALTER TABLE `characters` DISABLE KEYS */;
+INSERT INTO `characters` (`identifier`, `steamname`, `charidentifier`, `group`, `money`, `gold`, `rol`, `xp`, `healthouter`, `healthinner`, `staminaouter`, `staminainner`, `hours`, `LastLogin`, `inventory`, `job`, `status`, `meta`, `firstname`, `lastname`, `skinPlayer`, `compPlayer`, `jobgrade`, `coords`, `isdead`, `clanid`, `trust`, `supporter`, `walk`, `crafting`, `info`, `gunsmith`, `ammo`, `clan`, `discordid`, `lastjoined`, `motel`, `moonshineenty`) VALUES
+	('steam:110000102bfe58a', 'Nerzors', 1, 'admin', 3500.00, 1.00, 0.00, 0, 500, 100, 500, 100, 0, '2023-05-04', '{}', 'unemployed', '{"Metabolism":-700,"Thirst":302,"Hunger":650}', '{}', 'Edward', 'China', '{"sex":"mp_male","HeadType":908431499,"BodyType":383947425,"LegsType":-2068143351,"HeadSize":0.3,"EyeBrowH":0.0,"EyeBrowW":0.0,"EyeBrowD":0.0,"EarsH":0.0,"EarsW":0.0,"EarsD":0.0,"EarsL":0.0,"EyeLidH":0.0,"EyeLidW":0.0,"EyeD":0.0,"EyeAng":0.0,"EyeDis":0.0,"EyeH":0.0,"NoseW":0.0,"NoseS":0.0,"NoseH":0.0,"NoseAng":0.0,"NoseC":0.0,"NoseDis":0.0,"CheekBonesH":0.0,"CheekBonesW":0.0,"CheekBonesD":0.0,"MouthW":0.0,"MouthD":0.0,"MouthX":0.0,"MouthY":0.0,"ULiphH":0.0,"ULiphW":0.0,"ULiphD":0.0,"LLiphH":0.0,"LLiphW":0.0,"LLiphD":0.0,"JawH":0.0,"JawW":0.0,"JawD":0.0,"ChinH":0.0,"ChinW":0.0,"ChinD":0.0,"Beard":1783629149,"Hair":2622916743,"Body":61606861,"Waist":2249546070,"Eyes":1864171073,"Scale":1.05,"eyebrows_visibility":1,"eyebrows_tx_id":0,"scars_visibility":1,"scars_tx_id":0,"spots_visibility":0,"spots_tx_id":0,"disc_visibility":0,"disc_tx_id":0,"complex_visibility":0,"complex_tx_id":0,"acne_visibility":0,"acne_tx_id":0,"ageing_visibility":0,"ageing_tx_id":0,"freckles_visibility":0,"freckles_tx_id":0,"moles_visibility":0,"moles_tx_id":0,"grime_visibility":0,"grime_tx_id":0,"lipsticks_visibility":0,"lipsticks_tx_id":0,"lipsticks_palette_id":0,"lipsticks_palette_color_primary":0,"shadows_visibility":0,"shadows_tx_id":0,"shadows_palette_id":0,"shadows_palette_color_primary":0,"albedo":317354806}', '{"Hat":-1,"EyeWear":-1,"Mask":-1,"NeckWear":-1,"NeckTies":-1,"Shirt":2183442,"Suspender":-1,"Vest":1626773673,"Coat":331167570,"Poncho":-1,"Cloak":-1,"Glove":1266290862,"RingRh":-1,"RingLh":-1,"Bracelet":-1,"Gunbelt":-1,"Belt":7635313,"Buckle":-1,"Holster":-1,"Pant":315909040,"Skirt":-1,"Chap":-1,"Boots":951372388,"Spurs":-1,"Spats":-1,"GunbeltAccs":-1,"Gauntlets":-1,"Loadouts":-1,"Accessories":-1,"Satchels":-1,"CoatClosed":-1}', 0, '{"z":117.5223388671875,"heading":85.03936767578125,"x":-313.4637451171875,"y":790.087890625}', 0, 0, 0, 0, 'MP_Style_Casual', '{"medical":0,"blacksmith":0,"basic":0,"survival":0,"brewing":0,"food":0}', '{}', 0.00, '{}', 0, '0', '[]', '0', '{}');
+/*!40000 ALTER TABLE `characters` ENABLE KEYS */;
 
-CREATE TABLE `housing`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `identifier` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `charidentifier` int(11) NOT NULL,
-  `inventory` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-  `furniture` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
-  `open` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34307 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
-CREATE TABLE `rooms`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `interiorId` int(11) NOT NULL,
-  `inventory` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL,
-  `identifier` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `charidentifier` int(11) NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
+-- Exportiere Struktur von Tabelle vorp.character_inventories
 CREATE TABLE IF NOT EXISTS `character_inventories` (
   `character_id` int(11) DEFAULT NULL,
   `inventory_type` varchar(100) NOT NULL DEFAULT 'default',
@@ -144,7 +159,14 @@ CREATE TABLE IF NOT EXISTS `character_inventories` (
   KEY `character_inventory_idx` (`character_id`,`inventory_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Exportiere Daten aus Tabelle vorp.character_inventories: ~2 rows (ungefähr)
+/*!40000 ALTER TABLE `character_inventories` DISABLE KEYS */;
+INSERT INTO `character_inventories` (`character_id`, `inventory_type`, `item_crafted_id`, `amount`, `created_at`) VALUES
+	(1, 'default', 2, 2, '2023-05-04 23:00:56'),
+	(1, 'default', 1, 1, '2023-05-04 23:00:56');
+/*!40000 ALTER TABLE `character_inventories` ENABLE KEYS */;
 
+-- Exportiere Struktur von Tabelle vorp.doors
 CREATE TABLE IF NOT EXISTS `doors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `doorinfo` longtext NOT NULL DEFAULT '[]',
@@ -154,6 +176,11 @@ CREATE TABLE IF NOT EXISTS `doors` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Exportiere Daten aus Tabelle vorp.doors: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `doors` DISABLE KEYS */;
+/*!40000 ALTER TABLE `doors` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.herbalists
 CREATE TABLE IF NOT EXISTS `herbalists` (
   `identifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `charidentifier` int(11) NOT NULL,
@@ -162,6 +189,11 @@ CREATE TABLE IF NOT EXISTS `herbalists` (
   UNIQUE KEY `identifier_charidentifier` (`identifier`,`charidentifier`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
+-- Exportiere Daten aus Tabelle vorp.herbalists: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `herbalists` DISABLE KEYS */;
+/*!40000 ALTER TABLE `herbalists` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.horses
 CREATE TABLE IF NOT EXISTS `horses` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `identifier` varchar(40) NOT NULL,
@@ -176,8 +208,13 @@ CREATE TABLE IF NOT EXISTS `horses` (
   PRIMARY KEY (`id`),
   KEY `FK_horses_characters` (`charid`),
   KEY `model` (`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Exportiere Daten aus Tabelle vorp.horses: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `horses` DISABLE KEYS */;
+/*!40000 ALTER TABLE `horses` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.horse_complements
 CREATE TABLE IF NOT EXISTS `horse_complements` (
   `identifier` varchar(50) NOT NULL,
   `charidentifier` int(11) NOT NULL,
@@ -185,6 +222,11 @@ CREATE TABLE IF NOT EXISTS `horse_complements` (
   UNIQUE KEY `identifier` (`identifier`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
+-- Exportiere Daten aus Tabelle vorp.horse_complements: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `horse_complements` DISABLE KEYS */;
+/*!40000 ALTER TABLE `horse_complements` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.housing
 CREATE TABLE IF NOT EXISTS `housing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `identifier` varchar(255) DEFAULT NULL,
@@ -193,160 +235,28 @@ CREATE TABLE IF NOT EXISTS `housing` (
   `furniture` longtext DEFAULT NULL,
   `open` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=34307 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
+-- Exportiere Daten aus Tabelle vorp.housing: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `housing` DISABLE KEYS */;
+/*!40000 ALTER TABLE `housing` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.items
 CREATE TABLE IF NOT EXISTS `items` (
   `item` varchar(50) NOT NULL,
   `label` varchar(50) NOT NULL,
   `limit` int(11) NOT NULL DEFAULT 1,
   `can_remove` tinyint(1) NOT NULL DEFAULT 1,
- `type` VARCHAR(50) NULL DEFAULT 'item_standard' COLLATE 'utf8mb4_general_ci',
+  `type` varchar(50) DEFAULT 'item_standard',
   `usable` tinyint(1) DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT '{}' CHECK (json_valid(`metadata`)),
   `desc` varchar(5550) NOT NULL DEFAULT 'nice item',
   PRIMARY KEY (`item`) USING BTREE,
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=897 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
 
-CREATE TABLE IF NOT EXISTS `items_crafted` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `character_id` int(11) NOT NULL,
-  `item_id` int(11) NOT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metadata`)),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `ID` (`id`),
-  KEY `crafted_item_idx` (`character_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS `jail` (
-  `identifier` varchar(100) NOT NULL DEFAULT '0',
-  `name` varchar(100) NOT NULL DEFAULT '0',
-  `characterid` varchar(5) NOT NULL DEFAULT '0',
-  `time` varchar(100) NOT NULL DEFAULT '0',
-  `time_s` varchar(100) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-CREATE TABLE IF NOT EXISTS `loadout` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `identifier` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_bin',
-  `charidentifier` int(11) DEFAULT NULL,
-  `name` varchar(50) DEFAULT NULL,
-  `ammo` varchar(255) NOT NULL DEFAULT '{}',
-  `components` varchar(255) NOT NULL DEFAULT '{}',
-  `dirtlevel` double DEFAULT 0,
-  `mudlevel` double DEFAULT 0,
-  `conditionlevel` double DEFAULT 0,
-  `rustlevel` double DEFAULT 0,
-  `used` tinyint(4) DEFAULT 0,
-  `used2` tinyint(4) DEFAULT 0,
-  `dropped` int(11) NOT NULL DEFAULT 0,
-  `comps` longtext NOT NULL DEFAULT '{}',
-  `label` varchar(50) DEFAULT NULL,
-  `curr_inv` varchar(100) NOT NULL DEFAULT 'default',
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-
-CREATE TABLE IF NOT EXISTS `mailbox_mails` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sender_id` varchar(50) DEFAULT NULL,
-  `sender_firstname` varchar(50) DEFAULT NULL,
-  `sender_lastname` varchar(50) DEFAULT NULL,
-  `receiver_id` varchar(50) DEFAULT NULL,
-  `receiver_firstname` varchar(50) DEFAULT NULL,
-  `receiver_lastname` varchar(50) DEFAULT NULL,
-  `message` text DEFAULT NULL,
-  `opened` tinyint(1) DEFAULT 0,
-  `received_at` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS `outfits` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `identifier` varchar(45) NOT NULL,
-  `charidentifier` int(11) DEFAULT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `comps` longtext DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
-
-
-CREATE TABLE IF NOT EXISTS `rooms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `interiorId` int(11) NOT NULL,
-  `inventory` longtext DEFAULT NULL,
-  `identifier` varchar(60) NOT NULL,
-  `charidentifier` int(11) NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
-
-
-CREATE TABLE IF NOT EXISTS `stables` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `identifier` varchar(50) NOT NULL,
-  `charidentifier` int(11) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `modelname` varchar(70) NOT NULL,
-  `type` varchar(11) NOT NULL,
-  `status` longtext DEFAULT NULL,
-  `xp` int(11) DEFAULT 0,
-  `injured` int(11) DEFAULT 0,
-  `gear` longtext DEFAULT NULL,
-  `isDefault` int(11) NOT NULL DEFAULT 0,
-  `inventory` longtext DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
-
-CREATE TABLE IF NOT EXISTS `wagons` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `identifier` varchar(40) NOT NULL,
-  `charid` int(11) NOT NULL,
-  `selected` int(11) NOT NULL DEFAULT 0,
-  `model` varchar(50) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `items` longtext DEFAULT '{}',
-  PRIMARY KEY (`id`),
-  KEY `FK_horses_characters` (`charid`),
-  KEY `model` (`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE IF NOT EXISTS `wagon_water` (
-  `identifier` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
-  `charid` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
-  `wagon` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
-  `water` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
-  `wagon_name` varchar(50) COLLATE latin1_general_cs DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
-
-CREATE TABLE `whitelist` (
-    `id` INT(11) NOT NULL AUTO_INCREMENT,
-    `identifier` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_bin',
-    `status` TINYINT(1) NULL DEFAULT NULL,
-    `firstconnection` TINYINT(1) NULL DEFAULT '1',
-    PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `identifier` (`identifier`) USING BTREE,
-    CONSTRAINT `FK_characters_whitelist` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON UPDATE CASCADE ON DELETE CASCADE
-    )
-    COLLATE='utf8mb4_general_ci'
-    ENGINE=InnoDB
-    ROW_FORMAT=DYNAMIC
-;
-
-ALTER TABLE `loadout`
-ADD CONSTRAINT `FK_loadout_users` FOREIGN KEY (`identifier`)
-REFERENCES `users` (`identifier`)
-ON DELETE CASCADE
-ON UPDATE CASCADE;
-
-INSERT IGNORE INTO `banks` (`name`) VALUES
-	('Blackwater'),
-	('SaintDenis'),
-	('Valentine');
-
-
+-- Exportiere Daten aus Tabelle vorp.items: ~730 rows (ungefähr)
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
 INSERT INTO `items` (`item`, `label`, `limit`, `can_remove`, `type`, `usable`, `id`, `metadata`, `desc`) VALUES
 	('acid', 'Acid', 10, 1, 'item_standard', 1, 1, '{}', 'nice item'),
@@ -360,10 +270,10 @@ INSERT INTO `items` (`item`, `label`, `limit`, `can_remove`, `type`, `usable`, `
 	('aligatorto', 'Alligator tooth', 20, 1, 'item_standard', 1, 543, '{}', 'nice item'),
 	('American_Ginseng', 'American Ginseng', 10, 1, 'item_standard', 1, 7, '{}', 'nice item'),
 	('American_Ginseng_Seed', 'American Ginseng Seed', 10, 1, 'item_standard', 1, 8, '{}', 'nice item'),
-	('ammoarrownormal', 'Arrow Normal', 10, 1, 'item_standard', 1, 9, '{}', 'nice item'),
 	('ammoarrowdynamite', 'Arrow Dynamite', 10, 1, 'item_standard', 1, 10, '{}', 'nice item'),
 	('ammoarrowfire', 'Arrow Fire', 10, 1, 'item_standard', 1, 11, '{}', 'nice item'),
 	('ammoarrowimproved', 'Arrow Improved', 10, 1, 'item_standard', 1, 12, '{}', 'nice item'),
+	('ammoarrownormal', 'Arrow Normal', 10, 1, 'item_standard', 1, 9, '{}', 'nice item'),
 	('ammoarrowpoison', 'Arrow Poison', 10, 1, 'item_standard', 1, 13, '{}', 'nice item'),
 	('ammoarrowsmallgame', 'Arrow Small Game', 10, 1, 'item_standard', 1, 14, '{}', 'nice item'),
 	('ammobolahawk', 'Bola Ammo Hawk', 10, 1, 'item_standard', 1, 15, '{}', 'nice item'),
@@ -1079,3 +989,206 @@ INSERT INTO `items` (`item`, `label`, `limit`, `can_remove`, `type`, `usable`, `
 	('wsnakeskin', 'Watersnake pelt', 20, 1, 'item_standard', 1, 485, '{}', 'nice item'),
 	('Yarrow', 'Yarrow', 10, 1, 'item_standard', 1, 336, '{}', 'nice item'),
 	('Yarrow_Seed', 'Yarrow Seed', 10, 1, 'item_standard', 1, 337, '{}', 'nice item');
+/*!40000 ALTER TABLE `items` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.items_crafted
+CREATE TABLE IF NOT EXISTS `items_crafted` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `character_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metadata`)),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ID` (`id`),
+  KEY `crafted_item_idx` (`character_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle vorp.items_crafted: ~2 rows (ungefähr)
+/*!40000 ALTER TABLE `items_crafted` DISABLE KEYS */;
+INSERT INTO `items_crafted` (`id`, `character_id`, `item_id`, `updated_at`, `metadata`) VALUES
+	(1, 1, 36, '2023-05-04 23:00:56', '[]'),
+	(2, 1, 133, '2023-05-04 23:00:56', '[]');
+/*!40000 ALTER TABLE `items_crafted` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.jail
+CREATE TABLE IF NOT EXISTS `jail` (
+  `identifier` varchar(100) NOT NULL DEFAULT '0',
+  `name` varchar(100) NOT NULL DEFAULT '0',
+  `characterid` varchar(5) NOT NULL DEFAULT '0',
+  `time` varchar(100) NOT NULL DEFAULT '0',
+  `time_s` varchar(100) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Exportiere Daten aus Tabelle vorp.jail: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `jail` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jail` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.loadout
+CREATE TABLE IF NOT EXISTS `loadout` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `charidentifier` int(11) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `ammo` varchar(255) NOT NULL DEFAULT '{}',
+  `components` varchar(255) NOT NULL DEFAULT '{}',
+  `dirtlevel` double DEFAULT 0,
+  `mudlevel` double DEFAULT 0,
+  `conditionlevel` double DEFAULT 0,
+  `rustlevel` double DEFAULT 0,
+  `used` tinyint(4) DEFAULT 0,
+  `used2` tinyint(4) DEFAULT 0,
+  `dropped` int(11) NOT NULL DEFAULT 0,
+  `comps` longtext NOT NULL DEFAULT '{}',
+  `label` varchar(50) DEFAULT NULL,
+  `curr_inv` varchar(100) NOT NULL DEFAULT 'default',
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`),
+  KEY `FK_loadout_users` (`identifier`),
+  CONSTRAINT `FK_loadout_users` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle vorp.loadout: ~2 rows (ungefähr)
+/*!40000 ALTER TABLE `loadout` DISABLE KEYS */;
+INSERT INTO `loadout` (`id`, `identifier`, `charidentifier`, `name`, `ammo`, `components`, `dirtlevel`, `mudlevel`, `conditionlevel`, `rustlevel`, `used`, `used2`, `dropped`, `comps`, `label`, `curr_inv`) VALUES
+	(1, 'steam:110000102bfe58a', 1, 'WEAPON_MELEE_KNIFE', '[]', '[]', 0, 0, 0, 0, 0, 0, 0, '{}', NULL, 'default'),
+	(2, 'steam:110000102bfe58a', 1, 'WEAPON_PISTOL_VOLCANIC', '{"nothing":0}', '["nothing"]', 0, 0, 0, 0, 0, 0, 0, '{}', NULL, 'default');
+/*!40000 ALTER TABLE `loadout` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.mailbox_mails
+CREATE TABLE IF NOT EXISTS `mailbox_mails` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sender_id` varchar(50) DEFAULT NULL,
+  `sender_firstname` varchar(50) DEFAULT NULL,
+  `sender_lastname` varchar(50) DEFAULT NULL,
+  `receiver_id` varchar(50) DEFAULT NULL,
+  `receiver_firstname` varchar(50) DEFAULT NULL,
+  `receiver_lastname` varchar(50) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `opened` tinyint(1) DEFAULT 0,
+  `received_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle vorp.mailbox_mails: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `mailbox_mails` DISABLE KEYS */;
+/*!40000 ALTER TABLE `mailbox_mails` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.outfits
+CREATE TABLE IF NOT EXISTS `outfits` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(45) NOT NULL,
+  `charidentifier` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `comps` longtext DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+-- Exportiere Daten aus Tabelle vorp.outfits: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `outfits` DISABLE KEYS */;
+/*!40000 ALTER TABLE `outfits` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.rooms
+CREATE TABLE IF NOT EXISTS `rooms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `interiorId` int(11) NOT NULL,
+  `inventory` longtext DEFAULT NULL,
+  `identifier` varchar(60) NOT NULL,
+  `charidentifier` int(11) NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+
+-- Exportiere Daten aus Tabelle vorp.rooms: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `rooms` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rooms` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.stables
+CREATE TABLE IF NOT EXISTS `stables` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(50) NOT NULL,
+  `charidentifier` int(11) NOT NULL,
+  `name` varchar(30) NOT NULL,
+  `modelname` varchar(70) NOT NULL,
+  `type` varchar(11) NOT NULL,
+  `status` longtext DEFAULT NULL,
+  `xp` int(11) DEFAULT 0,
+  `injured` int(11) DEFAULT 0,
+  `gear` longtext DEFAULT NULL,
+  `isDefault` int(11) NOT NULL DEFAULT 0,
+  `inventory` longtext DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+-- Exportiere Daten aus Tabelle vorp.stables: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `stables` DISABLE KEYS */;
+/*!40000 ALTER TABLE `stables` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.users
+CREATE TABLE IF NOT EXISTS `users` (
+  `identifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `group` varchar(50) DEFAULT 'user',
+  `warnings` int(11) DEFAULT 0,
+  `banned` tinyint(1) DEFAULT NULL,
+  `banneduntil` int(10) DEFAULT 0,
+  `char` varchar(50) NOT NULL DEFAULT 'false',
+  PRIMARY KEY (`identifier`),
+  UNIQUE KEY `identifier` (`identifier`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle vorp.users: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` (`identifier`, `group`, `warnings`, `banned`, `banneduntil`, `char`) VALUES
+	('steam:110000102bfe58a', 'user', 0, 0, 0, 'false');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.wagons
+CREATE TABLE IF NOT EXISTS `wagons` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(40) NOT NULL,
+  `charid` int(11) NOT NULL,
+  `selected` int(11) NOT NULL DEFAULT 0,
+  `model` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `items` longtext DEFAULT '{}',
+  PRIMARY KEY (`id`),
+  KEY `FK_horses_characters` (`charid`),
+  KEY `model` (`model`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle vorp.wagons: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `wagons` DISABLE KEYS */;
+/*!40000 ALTER TABLE `wagons` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.wagon_water
+CREATE TABLE IF NOT EXISTS `wagon_water` (
+  `identifier` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
+  `charid` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
+  `wagon` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
+  `water` varchar(255) COLLATE latin1_general_cs DEFAULT '0',
+  `wagon_name` varchar(50) COLLATE latin1_general_cs DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+-- Exportiere Daten aus Tabelle vorp.wagon_water: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `wagon_water` DISABLE KEYS */;
+/*!40000 ALTER TABLE `wagon_water` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle vorp.whitelist
+CREATE TABLE IF NOT EXISTS `whitelist` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `identifier` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `firstconnection` tinyint(1) DEFAULT 1,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `identifier` (`identifier`) USING BTREE,
+  CONSTRAINT `FK_characters_whitelist` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
+
+-- Exportiere Daten aus Tabelle vorp.whitelist: ~0 rows (ungefähr)
+/*!40000 ALTER TABLE `whitelist` DISABLE KEYS */;
+INSERT INTO `whitelist` (`id`, `identifier`, `status`, `firstconnection`) VALUES
+	(1, 'steam:110000102bfe58a', 0, 0);
+/*!40000 ALTER TABLE `whitelist` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40111 SET SQL_NOTES=IFNULL(@OLD_SQL_NOTES, 1) */;
