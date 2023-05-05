@@ -1,22 +1,3 @@
--- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server Version:               10.4.22-MariaDB - mariadb.org binary distribution
--- Server Betriebssystem:        Win64
--- HeidiSQL Version:             11.3.0.6295
--- --------------------------------------------------------
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-
--- Exportiere Datenbank Struktur für vorp
-CREATE DATABASE IF NOT EXISTS `vorp` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `vorp`;
-
 -- Exportiere Struktur von Tabelle vorp.banks
 CREATE TABLE IF NOT EXISTS `banks` (
   `name` varchar(50) NOT NULL,
@@ -128,26 +109,8 @@ CREATE TABLE IF NOT EXISTS `characters` (
   `lastjoined` longtext COLLATE utf8mb4_bin DEFAULT '[]',
   `motel` varchar(255) COLLATE utf8mb4_bin DEFAULT '0',
   `moonshineenty` longtext COLLATE utf8mb4_bin DEFAULT '{}',
-  UNIQUE KEY `identifier_charidentifier` (`identifier`,`charidentifier`) USING BTREE,
-  KEY `charidentifier` (`charidentifier`) USING BTREE,
-  KEY `clanid` (`clanid`),
-  KEY `crafting` (`crafting`(768)),
-  KEY `compPlayer` (`compPlayer`(768)),
-  KEY `info` (`info`(768)),
-  KEY `inventory` (`inventory`(768)),
-  KEY `coords` (`coords`(768)),
-  KEY `money` (`money`),
-  KEY `meta` (`meta`),
-  KEY `steamname` (`steamname`),
-  KEY `ammo` (`ammo`(768)),
   CONSTRAINT `FK_characters_users` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
-
--- Exportiere Daten aus Tabelle vorp.characters: ~1 rows (ungefähr)
-/*!40000 ALTER TABLE `characters` DISABLE KEYS */;
-INSERT INTO `characters` (`identifier`, `steamname`, `charidentifier`, `group`, `money`, `gold`, `rol`, `xp`, `healthouter`, `healthinner`, `staminaouter`, `staminainner`, `hours`, `LastLogin`, `inventory`, `job`, `status`, `meta`, `firstname`, `lastname`, `skinPlayer`, `compPlayer`, `jobgrade`, `coords`, `isdead`, `clanid`, `trust`, `supporter`, `walk`, `crafting`, `info`, `gunsmith`, `ammo`, `clan`, `discordid`, `lastjoined`, `motel`, `moonshineenty`) VALUES
-	('steam:110000102bfe58a', 'Nerzors', 1, 'admin', 3500.00, 1.00, 0.00, 0, 500, 100, 500, 100, 0, '2023-05-04', '{}', 'unemployed', '{"Metabolism":-700,"Thirst":302,"Hunger":650}', '{}', 'Edward', 'China', '{"sex":"mp_male","HeadType":908431499,"BodyType":383947425,"LegsType":-2068143351,"HeadSize":0.3,"EyeBrowH":0.0,"EyeBrowW":0.0,"EyeBrowD":0.0,"EarsH":0.0,"EarsW":0.0,"EarsD":0.0,"EarsL":0.0,"EyeLidH":0.0,"EyeLidW":0.0,"EyeD":0.0,"EyeAng":0.0,"EyeDis":0.0,"EyeH":0.0,"NoseW":0.0,"NoseS":0.0,"NoseH":0.0,"NoseAng":0.0,"NoseC":0.0,"NoseDis":0.0,"CheekBonesH":0.0,"CheekBonesW":0.0,"CheekBonesD":0.0,"MouthW":0.0,"MouthD":0.0,"MouthX":0.0,"MouthY":0.0,"ULiphH":0.0,"ULiphW":0.0,"ULiphD":0.0,"LLiphH":0.0,"LLiphW":0.0,"LLiphD":0.0,"JawH":0.0,"JawW":0.0,"JawD":0.0,"ChinH":0.0,"ChinW":0.0,"ChinD":0.0,"Beard":1783629149,"Hair":2622916743,"Body":61606861,"Waist":2249546070,"Eyes":1864171073,"Scale":1.05,"eyebrows_visibility":1,"eyebrows_tx_id":0,"scars_visibility":1,"scars_tx_id":0,"spots_visibility":0,"spots_tx_id":0,"disc_visibility":0,"disc_tx_id":0,"complex_visibility":0,"complex_tx_id":0,"acne_visibility":0,"acne_tx_id":0,"ageing_visibility":0,"ageing_tx_id":0,"freckles_visibility":0,"freckles_tx_id":0,"moles_visibility":0,"moles_tx_id":0,"grime_visibility":0,"grime_tx_id":0,"lipsticks_visibility":0,"lipsticks_tx_id":0,"lipsticks_palette_id":0,"lipsticks_palette_color_primary":0,"shadows_visibility":0,"shadows_tx_id":0,"shadows_palette_id":0,"shadows_palette_color_primary":0,"albedo":317354806}', '{"Hat":-1,"EyeWear":-1,"Mask":-1,"NeckWear":-1,"NeckTies":-1,"Shirt":2183442,"Suspender":-1,"Vest":1626773673,"Coat":331167570,"Poncho":-1,"Cloak":-1,"Glove":1266290862,"RingRh":-1,"RingLh":-1,"Bracelet":-1,"Gunbelt":-1,"Belt":7635313,"Buckle":-1,"Holster":-1,"Pant":315909040,"Skirt":-1,"Chap":-1,"Boots":951372388,"Spurs":-1,"Spats":-1,"GunbeltAccs":-1,"Gauntlets":-1,"Loadouts":-1,"Accessories":-1,"Satchels":-1,"CoatClosed":-1}', 0, '{"z":117.5223388671875,"heading":85.03936767578125,"x":-313.4637451171875,"y":790.087890625}', 0, 0, 0, 0, 'MP_Style_Casual', '{"medical":0,"blacksmith":0,"basic":0,"survival":0,"brewing":0,"food":0}', '{}', 0.00, '{}', 0, '0', '[]', '0', '{}');
-/*!40000 ALTER TABLE `characters` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle vorp.character_inventories
 CREATE TABLE IF NOT EXISTS `character_inventories` (
@@ -158,13 +121,6 @@ CREATE TABLE IF NOT EXISTS `character_inventories` (
   `created_at` timestamp NULL DEFAULT current_timestamp(),
   KEY `character_inventory_idx` (`character_id`,`inventory_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Exportiere Daten aus Tabelle vorp.character_inventories: ~2 rows (ungefähr)
-/*!40000 ALTER TABLE `character_inventories` DISABLE KEYS */;
-INSERT INTO `character_inventories` (`character_id`, `inventory_type`, `item_crafted_id`, `amount`, `created_at`) VALUES
-	(1, 'default', 2, 2, '2023-05-04 23:00:56'),
-	(1, 'default', 1, 1, '2023-05-04 23:00:56');
-/*!40000 ALTER TABLE `character_inventories` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle vorp.doors
 CREATE TABLE IF NOT EXISTS `doors` (
@@ -1047,13 +1003,6 @@ CREATE TABLE IF NOT EXISTS `loadout` (
   CONSTRAINT `FK_loadout_users` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle vorp.loadout: ~2 rows (ungefähr)
-/*!40000 ALTER TABLE `loadout` DISABLE KEYS */;
-INSERT INTO `loadout` (`id`, `identifier`, `charidentifier`, `name`, `ammo`, `components`, `dirtlevel`, `mudlevel`, `conditionlevel`, `rustlevel`, `used`, `used2`, `dropped`, `comps`, `label`, `curr_inv`) VALUES
-	(1, 'steam:110000102bfe58a', 1, 'WEAPON_MELEE_KNIFE', '[]', '[]', 0, 0, 0, 0, 0, 0, 0, '{}', NULL, 'default'),
-	(2, 'steam:110000102bfe58a', 1, 'WEAPON_PISTOL_VOLCANIC', '{"nothing":0}', '["nothing"]', 0, 0, 0, 0, 0, 0, 0, '{}', NULL, 'default');
-/*!40000 ALTER TABLE `loadout` ENABLE KEYS */;
-
 -- Exportiere Struktur von Tabelle vorp.mailbox_mails
 CREATE TABLE IF NOT EXISTS `mailbox_mails` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1134,12 +1083,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `identifier` (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle vorp.users: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`identifier`, `group`, `warnings`, `banned`, `banneduntil`, `char`) VALUES
-	('steam:110000102bfe58a', 'user', 0, 0, 0, 'false');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-
 -- Exportiere Struktur von Tabelle vorp.wagons
 CREATE TABLE IF NOT EXISTS `wagons` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1181,12 +1124,6 @@ CREATE TABLE IF NOT EXISTS `whitelist` (
   UNIQUE KEY `identifier` (`identifier`) USING BTREE,
   CONSTRAINT `FK_characters_whitelist` FOREIGN KEY (`identifier`) REFERENCES `users` (`identifier`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC;
-
--- Exportiere Daten aus Tabelle vorp.whitelist: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `whitelist` DISABLE KEYS */;
-INSERT INTO `whitelist` (`id`, `identifier`, `status`, `firstconnection`) VALUES
-	(1, 'steam:110000102bfe58a', 0, 0);
-/*!40000 ALTER TABLE `whitelist` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
